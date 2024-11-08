@@ -8,7 +8,6 @@ function App() {
   useEffect(() => {
     const fetchHellWorld = async() => {
       const res = await axios.get(`/v1/api`);
-      console.log(">>> check res: ", res);
     }
     fetchHellWorld();
   }, [])

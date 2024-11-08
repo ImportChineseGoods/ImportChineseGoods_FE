@@ -19,7 +19,20 @@ const loginCustomerApi = (email, password) => {
     }
     return axios.post(URL_API, data)
 }
+
+const customerListApi = (params) => {
+    const URL_API = "/v1/api/customer";
+    return axios.get(URL_API, {
+        params: {
+            page: params.page,
+            pageSize: params.pageSize,
+        },
+    });
+};
+
 export {
     createCustomerApi,
-    loginCustomerApi
+    loginCustomerApi,
+    customerListApi,
+
 }

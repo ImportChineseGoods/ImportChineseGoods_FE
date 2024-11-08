@@ -6,8 +6,9 @@ import './styles/index.css'
 import RegisterScreen from './screens/customer/register.jsx';
 import LoginScreen from './screens/customer/login.jsx';
 
-import User from './screens/customer/user.jsx';
+import CustomerList from './screens/employee/customer/customerList.jsx';
 import Homepage from './screens/customer/home.jsx';
+import NotFound from './screens/NotFound.jsx';
 
 const router = createBrowserRouter([
   {
@@ -27,11 +28,15 @@ const router = createBrowserRouter([
         element: <LoginScreen />
       },
       {
-        path: 'user',
-        element: <User />
+        path: 'customer-list',
+        element: <CustomerList/> 
       }
     ]
   },
+  {
+    path: '*',
+    element: <NotFound/>  // Trang hiển thị khi không tìm thấy đường dẫn
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(

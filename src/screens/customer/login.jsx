@@ -13,7 +13,7 @@ const LoginScreen = () => {
         const res = await loginCustomerApi(email, password);
         // debugger;
         if (res && res.EC == 0) {
-            localStorage.setItem('session_token', res.session_token);
+            localStorage.setItem('access_token', res.access_token);
             notification.success({
                 message: 'Đăng nhập thành công',
                 description: ''
