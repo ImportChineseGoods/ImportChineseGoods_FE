@@ -1,7 +1,7 @@
-import axios from "./axios.custiomize";
+import axios from "../axios.custiomize";
 
 const createCustomerApi = (name, phone, email, password) => {
-    const URL_API = "/v1/api/register";
+    const URL_API = "/customer/register";
     const data = {
         name,
         phone,
@@ -12,7 +12,7 @@ const createCustomerApi = (name, phone, email, password) => {
 }
 
 const loginCustomerApi = (email, password) => {
-    const URL_API = "/v1/api/login";
+    const URL_API = "/customer/login";
     const data = {
         email,
         password
@@ -21,7 +21,7 @@ const loginCustomerApi = (email, password) => {
 }
 
 const customerListApi = (params) => {
-    const URL_API = "/v1/api/customer";
+    const URL_API = "/customer/customer";
     return axios.get(URL_API, {
         params: {
             page: params.page,

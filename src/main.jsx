@@ -3,12 +3,12 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './styles/index.css'
-import RegisterScreen from './screens/customer/register.jsx';
-import LoginScreen from './screens/customer/login.jsx';
+import RegisterScreen from './screens/register.jsx';
+import LoginScreen from './screens/login.jsx';
 
-import CustomerList from './screens/employee/customer/customerList.jsx';
-import Homepage from './screens/customer/home.jsx';
+import Homepage from './screens/home.jsx';
 import NotFound from './screens/NotFound.jsx';
+import { AuthWrapper } from './components/context/authcontext.jsx';
 
 const router = createBrowserRouter([
   {
@@ -20,27 +20,25 @@ const router = createBrowserRouter([
         element: <Homepage />
       },
       {
-        path: 'register',
+        path: 'auth/register',
         element: <RegisterScreen />
       },
       {
-        path: 'login',
+        path: 'auth/login',
         element: <LoginScreen />
-      },
-      {
-        path: 'customer-list',
-        element: <CustomerList/> 
       }
     ]
   },
   {
     path: '*',
-    element: <NotFound/>  // Trang hiển thị khi không tìm thấy đường dẫn
+    element: <NotFound/>
   }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthWrapper>
+      <RouterProvider router={router} />
+    </AuthWrapper>
   </React.StrictMode>,
 )

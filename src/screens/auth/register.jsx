@@ -1,28 +1,28 @@
 import { Button, Checkbox, Form, Input, notification } from 'antd';
 import React from 'react';
-import { loginCustomerApi } from '../../util/api';
+import { createCustomerApi } from '../../util/api/customerApi';
 import { useNavigate } from 'react-router-dom';
-import '../../styles/index.css';
+import '../styles/index.css';
 
-const LoginScreen = () => {
+
+const RegisterScreen = () => {
     const navigate = useNavigate();
 
     const onFinish = async(values) => {
-        const {email, password } = values;
+        const { name, phone, email, password } = values;
 
-        const res = await loginCustomerApi(email, password);
-        // debugger;
-        if (res && res.EC == 0) {
-            localStorage.setItem('access_token', res.access_token);
+        const res = await createCustomerApi(name, phone, email, password);
+    
+        if (res) {
             notification.success({
-                message: 'Đăng nhập thành công',
-                description: ''
+                message: 'Đăng ký thành công',
+                description: 'Chuyển đến trang đăng nhập'
             })
-            navigate('/');
+            navigate('/login');
         } else {
             notification.error({
-                message: 'Đăng nhập thất bại',
-                description: res?.EM ?? "error"
+                message: 'Đăng ký thất bại',
+                description: 'Đã có lỗi xảy ra, vui lòng thử lại'
             })
         }
     };
@@ -41,6 +41,32 @@ const LoginScreen = () => {
                 autoComplete="off"
                 layout='vertical'
             >
+                <Form.Item
+                    label="Họ và tên"
+                    name="name"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Hãy nhập họ và tên của bạn',
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+
+                <Form.Item
+                    label="Số điện thoại"
+                    name="phone"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Hãy nhập số điện thoại của bạn',
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+
                 <Form.Item
                     label="Email"
                     name="email"
@@ -68,16 +94,9 @@ const LoginScreen = () => {
                 </Form.Item>
 
                 <Form.Item
-                    name="remember"
-                    valuePropName="checked"
-                >
-                    <Checkbox>Lưu đăng nhập</Checkbox>
-                </Form.Item>
-
-                <Form.Item
                 >
                     <Button type="primary" htmlType="submit">
-                        Đăng nhập
+                        Đăng ký
                     </Button>
                 </Form.Item>
             </Form>
@@ -85,4 +104,4 @@ const LoginScreen = () => {
     )
 }
 
-export default LoginScreen;
+export default RegisterScreen;

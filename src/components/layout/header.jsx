@@ -1,10 +1,13 @@
 import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/authcontext';
 
 const Header = () => {
     const navigate = useNavigate();
+    const {auth} = useContext(AuthContext);
+    console.log(auth);
     const items = [
         {
             label: <Link to="/">Homepage</Link>,
@@ -21,8 +24,15 @@ const Header = () => {
             key: 'price',
             icon: <MailOutlined />,
         },
+        // ...(auth?.isAuthenticated ? [
+        //     {
+        //         label: <Link to="/price-list">Bảng giá</Link>,
+        //         key: 'price',
+        //         icon: <MailOutlined />,
+        //     }, 
+        // ] : []),
         {
-            label: 'Submenu',
+            label: `${auth?.user?.name}`,
             key: 'SubMenu',
             icon: <SettingOutlined />,
             children: [
@@ -32,19 +42,29 @@ const Header = () => {
                 },
                 {
                     label: <span onClick={() => {
-                        localStorage.removeItem('access_token');
-                        navigate('/');
-                        window.location.reload();
+                        const token = localStorage.getItem('access_token');
+                        fetch('/api/logout', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`,
+                            },
+                        }).then(() => {
+                            localStorage.removeItem('access_token');
+                            navigate('/');
+                            window.location.reload();
+                        }).catch(err => console.error(err));
                     }}>Đăng xuất</span>,
                     key: 'logout',
                 },
+                
             ],
         },
+    
     ];
 
     const [current, setCurrent] = useState('home');
     const onClick = (e) => {
-        console.log('click ', e);
         setCurrent(e.key);
     };
     return <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} />;
