@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, notification, Typography, Image, Space, Flex } from 'antd';
+import { Table, Button, Typography, Image, Space, Flex, notification } from 'antd';
 import statusTagMapping from '@components/components/tag';
 import { useNavigate } from 'react-router-dom';
+import { formatUnit } from '@helpers/formatUnit';
+import { orderApi } from '@api/orderApi';
 const { Text, Link } = Typography;
 
 const OrdersList = ({ data, total, loading, page, pageSize, onPageChange }) => {
@@ -16,22 +18,23 @@ const OrdersList = ({ data, total, loading, page, pageSize, onPageChange }) => {
   }, [data]);
 
   const handleCancel = async (record) => {
-    // const orderToDelete = orders.find((item) => item.key === record.key);
-
-    // const response = await deleteOrderApi(orderToDelete);
-    // if (response.status === 200) {
-    //   notification.success({
-    //     message: 'Xóa thành công',
-    //     description: response?.RM || '',
-    //   });
-    //   const newOrders = orders.filter((item) => item.key !== record.key);
-    //   setOrders(newOrders);
-    // } else {
-    //   notification.error({
-    //     message: 'Xóa thất bại',
-    //     description: response?.RM || '',
-    //   });
-    // }
+    const response = await orderApi.cancelOrder(record.id);
+    if (response.status === 200) {
+      notification.success({
+        message: 'Hủy đơn hàng thành công',
+        description: response?.RM || '',
+      });
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.id === record.id ? { ...order, status: 'cancelled' } : order
+        )
+      );
+    } else {
+      notification.error({
+        message: 'Hủy đơn hàng thất bại',
+        description: response?.RM || '',
+      });
+    }
   };
 
   const columns = [
@@ -51,7 +54,7 @@ const OrdersList = ({ data, total, loading, page, pageSize, onPageChange }) => {
       title: 'Ảnh',
       dataIndex: 'products',
       render: (products) => {
-        return <Image width={80} height={80} src={products[0].image_url} />
+        return <Image width={80} height={80} src={products[0]?.image_url} />
       },
       width: '100px'
     },
@@ -60,14 +63,9 @@ const OrdersList = ({ data, total, loading, page, pageSize, onPageChange }) => {
       dataIndex: 'id',
     },
     {
-      title: 'Mã vận đơn',
-      dataIndex: 'bol',
-      render: (bol) => bol?.bol_code,
-    },
-    {
       title: 'Thông tin tài chính',
       render: (_, record) => {
-        const amount_paid = record.amount_paid === null ? 0 : parseInt(record?.amount_paid).toLocaleString('vi-VN');
+        const amount_paid = record.amount_paid === null ? formatUnit.moneyVN(0) : formatUnit.moneyVN(record.amount_paid);
         return (
           <Flex justify='space-between'>
             <Flex vertical>
@@ -75,10 +73,10 @@ const OrdersList = ({ data, total, loading, page, pageSize, onPageChange }) => {
               <Text type="success">Đã thanh toán:</Text>
               <Text type="danger">Còn nợ:</Text>
             </Flex>
-            <Flex vertical justify='flex-end' style={{textAlign: 'end'}}>
-              <Text>{record.total_amount.toLocaleString('vi-VN')} VNĐ</Text>
-              <Text type="success">{amount_paid} VNĐ</Text>
-              <Text type="danger">{parseInt(record.outstanding_amount).toLocaleString('vi-VN') || record.total_amount - amount_paid} VNĐ</Text>
+            <Flex vertical justify='flex-end' style={{ textAlign: 'end' }}>
+              <Text>{formatUnit.moneyVN(record.total_amount)}</Text>
+              <Text type="success">{amount_paid}</Text>
+              <Text type="danger">{formatUnit.moneyVN(record.outstanding_amount)}</Text>
             </Flex>
           </Flex>
         );
@@ -99,22 +97,30 @@ const OrdersList = ({ data, total, loading, page, pageSize, onPageChange }) => {
     },
     {
       title: 'Thao tác',
+      width: '100px',
       key: 'action',
       render: (_, record) => {
         const visibleStatus = ['waiting_deposit', 'deposited']
         const visible = visibleStatus.includes(record.status);
+        const isDeposited = record.status === 'waiting_deposit';
         return (
-          <Space size="middle">
-            <Button color="primary" variant="filled" onClick={() => navigate(`/orders/${record.id}`)}>
-              Xem
-            </Button>
-
-            {visible && (
-              <Button color="danger" variant="filled" onClick={() => handleCancel(record)}>
-                Hủy
+          <Flex vertical gap='middle'>
+            <Space size="middle">
+              <Button color="primary" variant="filled" onClick={() => navigate(`/orders/${record.id}`)}>
+                Xem
               </Button>
-            )}
-          </Space>
+
+              {visible && (
+                <Button color="danger" variant="filled" onClick={() => handleCancel(record)}>
+                  Hủy
+                </Button>
+              )}
+            </Space>
+            {isDeposited && <Button color="primary" variant="solid" onClick={() => navigate(`/orders/${record.id}/deposit`)}>
+              Đặt cọc
+            </Button>}
+          </Flex>
+
         );
       },
     },

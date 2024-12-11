@@ -1,9 +1,9 @@
-import { Breadcrumb, Divider, Flex, InputNumber, notification, Select } from 'antd';
+import { orderApi } from '@api/orderApi';
+import { Breadcrumb, Divider, Flex, notification, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
-import { getAllOrderApi } from '../../../api/orderApi';
 import OrdersList from '../components/OrderList';
+
 
 function Orders() {
   const [orders, setOrders] = useState([]);
@@ -15,7 +15,7 @@ function Orders() {
   useEffect(() => {
     const fetchOrders = async () => {
       setLoading(true);
-      const response = await getAllOrderApi(page, pageSize);
+      const response = await orderApi.getAllOrder(page, pageSize);
       if (response.status === 200) {
         setOrders(response.orders.rows);
         setTotal(response.orders.count);
@@ -32,7 +32,6 @@ function Orders() {
 
   const handlePageChange = (newPage, newPageSize) => {
     setPage(newPage);
-    setPageSize(newPageSize);
   };
 
   const handlePageSizeChange = (value) => {

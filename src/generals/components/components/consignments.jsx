@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, notification, Space } from 'antd';
-import statusTagMapping from '@components/components/tag';
-import { deleteConsignmentApi } from '../../../api/consignmentApi';
+
 import { useNavigate } from 'react-router-dom';
-import { render } from 'react-dom';
+import { consignmentApi } from '@/api/consignmentApi';
+import statusTagMapping from './tag';
 
 const ConsignmentsList = ({ data, total, loading, page, pageSize, onPageChange }) => {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const ConsignmentsList = ({ data, total, loading, page, pageSize, onPageChange }
   const handleDelete = async (record) => {
     const consignmentToDelete = consignments.find((item) => item.key === record.key);
 
-    const response = await deleteConsignmentApi(consignmentToDelete);
+    const response = await consignmentApi.deleteConsignment(consignmentToDelete);
     if (response.status === 200) {
       notification.success({
         message: 'Xóa thành công',

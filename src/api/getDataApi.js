@@ -1,10 +1,18 @@
 import axios from "./axios.custiomize";
 
-const overviewData = () => {
-    const URL_API = "/get/overview";
-    return axios.get(URL_API);
-};
+export const getData = {
+    overviewData: () => {
+        const URL_API = "/get/overview";
+        return axios.get(URL_API);
+    },
 
-export {
-    overviewData
+    orderDepositData: () => {
+        const URL_API = "/get/deposit";
+        return axios.get(URL_API);
+    },
+
+    depositData: () => {
+        const URL_API = "/get/deposit-info";
+        return axios.get(URL_API);
+    }
 }

@@ -7,12 +7,13 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src'), // Alias cho thư mục `src`
+      '@components': resolve(__dirname, './src/generals/components'), // Alias cho `components`
+      '@helpers': resolve(__dirname, './src/generals/helpers'), // Alias cho `helpers`
+      '@generals': resolve(__dirname, './src/generals'), // Alias cho `generals`
       '@pages': resolve(__dirname, './src/pages'), // Alias cho thư mục `pages`
       '@api': resolve(__dirname, './src/api'), // Alias cho `api`
       '@assets': resolve(__dirname, './src/assets'), // Alias cho `assets`
-      '@generals': resolve(__dirname, './src/generals'), // Alias cho `generals`
-      '@components': resolve(__dirname, './src/generals/components'), // Alias cho `components`
+      '@': resolve(__dirname, './src'), // Alias cho thư mục `src`
     },
   },
 })

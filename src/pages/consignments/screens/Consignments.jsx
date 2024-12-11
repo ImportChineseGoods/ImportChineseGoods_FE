@@ -1,8 +1,8 @@
-import { Breadcrumb, Divider, Flex, InputNumber, notification, Select } from 'antd';
+import { Breadcrumb, Divider, Flex, notification, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import ConsignmentsList from '../../generals/components/components/consignments';
-import { getAllConsignmentApi } from '../../api/consignmentApi';
+import { consignmentApi } from '@api/consignmentApi';
+import ConsignmentsList from '@components/components/consignments';
 
 function Consignments() {
   const [consignments, setConsignments] = useState([]);
@@ -14,7 +14,7 @@ function Consignments() {
   useEffect(() => {
     const fetchConsignments = async () => {
       setLoading(true);
-      const response = await getAllConsignmentApi(page, pageSize);
+      const response = await consignmentApi.getAllConsignment(page, pageSize);
       if (response.status === 200) {
         setConsignments(response.consignments.rows);
         setTotal(response.consignments.count);

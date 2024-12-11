@@ -5,10 +5,8 @@ import {
   PieChartOutlined,
   TeamOutlined,
   UserOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, Button } from 'antd';
+import { Layout, Menu } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
 
 const { Sider } = Layout;
@@ -81,16 +79,14 @@ const SiderWeb = () => {
   ];
 
   return (
-    <div style={{ display: 'flex' }}>
-        <Sider className="layouSider">
-          <Menu
-            theme="dark"
-            selectedKeys={[currentPath]}
-            mode="inline"
-            items={items}
-          />
-        </Sider>
-    </div>
+    <Sider className="layouSider">
+      <Menu
+        theme="dark"
+        selectedKeys={[currentPath]}
+        mode="inline"
+        items={items}
+      />
+    </Sider>
   );
 };
 

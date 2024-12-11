@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
 import { DownOutlined, LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Dropdown, Menu, Space } from 'antd';
+import { Avatar, Dropdown, Space } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '@generals/contexts/authcontext';
-import { AppResource } from '../../constants/AppResource';
+import { AppResource } from '@generals/constants/AppResource';
+import { formatUnit } from '@helpers/formatUnit';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -53,7 +54,7 @@ const Header = () => {
     <div className="layoutHeader" >
       <div className='layoutLogo'>
         <div className="logo"><img src={AppResource.logo} alt="logo" /></div>
-        <p>Tỷ giá: {applicableRate} đ</p>
+        <p>Tỷ giá: {formatUnit.moneyVN(applicableRate)}</p>
       </div>
       <Dropdown
         menu={{
@@ -62,7 +63,8 @@ const Header = () => {
       >
         <a onClick={(e) => e.preventDefault()}>
           <Space>
-            <Avatar icon={<UserOutlined />} />{auth?.user?.name}
+            {auth.user.avatar ? <Avatar src={auth.user.avatar} /> : <Avatar icon={<UserOutlined />}/>}
+            {auth?.user?.name}
             <DownOutlined />
           </Space>
         </a>

@@ -1,32 +1,25 @@
-import { Breadcrumb, Divider, Flex, notification, Timeline } from 'antd';
+import { Breadcrumb, Divider, Flex, notification, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
+const { Text } = Typography;
 
-import { use } from 'react';
-import { Link, Route, Routes, useParams } from 'react-router-dom'
-import { getOrderByIdApi } from '../../../api/orderApi';
-import statusTagMapping from '../../../generals/components/components/tag';
-import formatDate from '../../../generals/helpers/formatDate';
+import { Link, useParams } from 'react-router-dom'
+import { orderApi } from '@api/orderApi';
+import { formatUnit } from '@helpers/formatUnit';
+import Products from '../components/Products';
+import BonusOrder from '../components/BonusOrder';
+
 
 function OrderDetail() {
   const { order_id } = useParams();
-  const [loading, setLoading] = useState(true);
   const [order, setOrder] = useState({});
-  const [histories, setHistories] = useState([]);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const fetchOrder = async () => {
-      setLoading(true);
-      const response = await getOrderByIdApi(order_id);
+      const response = await orderApi.getOrderById(order_id);
       if (response.status === 200) {
         setOrder(response.order);
-
-        setHistories(order.histories.map((history) => {
-          const StatusTag = statusTagMapping[history.status];
-          return {
-            label: `${formatDate(history.create_at)} ${history?.employee ? `by ${history.employee}` : ''}`,
-            children: <StatusTag />
-          }
-        }))
+        setProducts(response.order.products);
 
       } else {
         notification.error({
@@ -34,96 +27,10 @@ function OrderDetail() {
           description: response?.RM || 'Vui lòng thử lại.',
         });
       }
-      setLoading(false);
     };
     fetchOrder();
   }, [])
 
-  console.log(histories);
-
-  const res = {
-    "status": 200,
-    "RC": "0045",
-    "RM": "Lấy dữ liệu thành công",
-    "order": {
-      "id": "DH0001",
-      "applicable_rate": "3690",
-      "original_rate": "3590",
-      "status": "waiting_deposit",
-      "commodity_money": "9.00",
-      "customer_id": "A0001",
-      "china_shipping_fee": "0.00",
-      "purchase_fee": "10000",
-      "shipping_fee": "0",
-      "incurred_fee": "0",
-      "number_of_product": 2,
-      "weight": "0.00",
-      "weight_fee": "27000",
-      "original_weight_fee": "22000",
-      "counting_fee": "0",
-      "purchase_discount": "0.00",
-      "shipping_discount": "0.00",
-      "packing_fee": "0.00",
-      "total_amount": "43210",
-      "amount_paid": null,
-      "outstanding_amount": "43210",
-      "actual_payment_amount": null,
-      "negotiable_money": null,
-      "contract_code": null,
-      "note": "This is a test order.",
-      "warehouse_id": 1,
-      "delivery_id": null,
-      "create_at": "2024-12-07T15:32:31.000Z",
-      "update_at": "2024-12-07T15:32:31.000Z",
-      "products": [
-        {
-          "id": 39,
-          "name": "sp 7",
-          "description": "4",
-          "link": "http://localhost:5173/cart",
-          "note": "yhg",
-          "quantity": 1,
-          "price": "4.50",
-          "image_url": "https://res.cloudinary.com/dyqpebht7/image/upload/v1733585435/phqkyzeogojq4x2wleya.png",
-          "shop": "shop 2",
-          "customer_id": "A0001",
-          "order_id": "DH0001",
-          "create_at": "2024-12-07T15:30:35.000Z",
-          "update_at": "2024-12-07T15:32:31.000Z"
-        },
-        {
-          "id": 40,
-          "name": "sp 6",
-          "description": "4",
-          "link": "http://localhost:5173/cart",
-          "note": "yhg",
-          "quantity": 1,
-          "price": "4.50",
-          "image_url": null,
-          "shop": "shop 2",
-          "customer_id": "A0001",
-          "order_id": "DH0001",
-          "create_at": "2024-12-07T15:30:45.000Z",
-          "update_at": "2024-12-07T15:32:31.000Z"
-        }
-      ],
-      "bol": null,
-      "histories": [
-        {
-          "id": 6,
-          "order_id": "DH0001",
-          "consignment_id": null,
-          "delivery_id": null,
-          "employee_id": null,
-          "complaint_id": null,
-          "anonymous_id": null,
-          "status": "waiting_deposit",
-          "create_at": "2024-12-07T15:32:31.000Z",
-          "update_at": "2024-12-07T15:32:31.000Z"
-        }
-      ]
-    }
-  }
   return (
     <div>
       <Breadcrumb
@@ -141,18 +48,42 @@ function OrderDetail() {
       />
       <Divider />
       <Flex gap='20px'>
-        <Flex className='orderInfoBox'>
-          <h2>Thông tin đơn hàng</h2>
-        </Flex>
-        <Flex style={{ width: '500px' }}>
-          <Timeline
-            mode='right'
-            items={histories}
-            style={{ width: '100%', padding: '20px 0' }}
-          />
-        </Flex>
+        <Flex className='detailBox' vertical>
+          <h2 style={{textAlign: 'center' }}>Thông tin đơn hàng {order.id}</h2>
+
+          <Flex justify='space-between'>
+          <div style={{width: '300px'}}>
+              <p className="two-column"><Text strong>Cân nặng: </Text>{formatUnit.weight(order.weight)}</p>
+              <p className="two-column"><Text strong>Phí cân nặng: </Text>{formatUnit.weightFee(order.weight_fee)}</p>
+              <p className="two-column"><Text strong>Phí vận chuyển: </Text>{formatUnit.moneyVN(order.shipping_fee)}</p>
+              <p className="two-column"><Text strong>CK phí vận chuyển ({formatUnit.percent(order.shipping_discount)}): </Text> <Text type="danger">-{formatUnit.moneyVN(order.shipping_discount * order.shipping_fee / 100)}</Text></p>
+              <p className="two-column"><Text strong>Phí mua hàng: </Text>{formatUnit.moneyVN(order.purchase_fee)}</p>
+              <p className="two-column"><Text strong>CK phí mua hàng ({formatUnit.percent(order.purchase_discount)}): </Text> <Text type="danger">-{formatUnit.moneyVN(order.purchase_discount * order.purchase_fee / 100)}</Text></p>
+              <p className="two-column"><Text strong>Phí đóng gói: </Text>{formatUnit.moneyVN(order.packing_fee)}</p>
+              <p className="two-column"><Text strong>Phí kiểm đếm: </Text>{formatUnit.moneyVN(order.counting_fee)}</p>
+              <p className="two-column"><Text strong>Ghi chú: </Text>{order.note}</p>
+            </div>
 
 
+            <div style={{width: '300px'}}>
+              <p className="two-column"><Text strong>Tỷ giá: </Text>{formatUnit.moneyVN(order.applicable_rate)}</p>
+              <p className="two-column"><Text strong>Phí phát sinh: </Text>{formatUnit.moneyVN(order.incurred_fee)}</p>
+              <p className="two-column"><Text strong>Phí ship nội địa: </Text>({formatUnit.moneyTQ(order.china_shipping_fee)}) {formatUnit.moneyVN(order.china_shipping_fee * order.applicable_rate)}</p>    
+              <p className="two-column"><Text strong>Tiền hàng: </Text>({formatUnit.moneyTQ(order.commodity_money)}) {formatUnit.moneyVN(order.commodity_money * order.applicable_rate)}</p>
+              <p className="two-column"><Text strong>Tổng đơn: </Text>{formatUnit.moneyVN(order.total_amount)}</p>
+              <p className="two-column"><Text strong>Đã thanh toán: </Text><Text type="success">{formatUnit.moneyVN(order.amount_paid || 0)}</Text></p>
+              <p className="two-column"><Text strong>Còn nợ: </Text><Text type="danger">{formatUnit.moneyVN(order.outstanding_amount)}</Text></p>
+              <p className="two-column"><Text strong>Kho nhận hàng: </Text>{order.warehouse?.name}</p>
+              <p className="two-column"><Text strong>Mã vận đơn:</Text><Text mark>{order?.bol?.bol_code}</Text></p>
+            </div>
+          </Flex>
+          <Divider />
+          <Products data={products}></Products>
+
+        </Flex>
+        <Flex vertical className='detailBox' style={{ width: '500px' }}>
+          <BonusOrder data={order} ></BonusOrder>
+        </Flex>
       </Flex>
     </div>
   )

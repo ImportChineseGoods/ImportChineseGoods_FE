@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Input, InputNumber, Form, Upload, notification, Breadcrumb, Divider } from 'antd';
-import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
-import { createProductApi } from '../../api/productApi';
-import uploadImageToCloudinary from '../../generals/utils/uploadImage';
+import { PlusOutlined } from '@ant-design/icons';
+import uploadImageToCloudinary from '@generals/utils/uploadImage';
 import { Link } from 'react-router-dom';
+import { productApi } from '@api/productApi';
 
 const formItemLayout = {
   labelCol: {
@@ -53,7 +53,7 @@ const CreateProduct = () => {
     }
 
     // Gọi API tạo sản phẩm
-    const res = await createProductApi({
+    const res = await productApi.createProduct({
       shop: values.shop,
       link: values.link,
       name: values.product,

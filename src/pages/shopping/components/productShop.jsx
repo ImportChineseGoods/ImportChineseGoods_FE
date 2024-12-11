@@ -1,14 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, Typography, InputNumber, Space, Table, Input, Image, notification, Flex, Divider } from 'antd';
-import { deleteProductApi, updateProductApi } from '../../../api/productApi';
-import AlertDelete from '../../../generals/components/components/alertDelete';
-import { AuthContext } from '../../../generals/contexts/authcontext';
-import { use } from 'react';
+import { AuthContext } from '@generals/contexts/authcontext';
 import { PauseOutlined } from '@ant-design/icons';
-import { createOrderApi } from '../../../api/orderApi';
+import { productApi } from '@api/productApi';
+import { orderApi } from '@api/orderApi';
+import { formatUnit } from '@helpers/formatUnit';
 const { Link } = Typography;
 
-const ProductShop = ({ data }) => {
+const ProductShop = ({ data, onShopEmpty }) => {
   const { applicableRate } = useContext(AuthContext);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -36,7 +35,7 @@ const ProductShop = ({ data }) => {
 
   const handleSave = async (record) => {
     const productToUpdate = products.find((item) => item.key === record.key);
-    const response = await updateProductApi(productToUpdate);
+    const response = await productApi.updateProduct(productToUpdate);
     if (response.status === 200) {
       notification.success({
         message: 'Lưu thành công',
@@ -53,7 +52,7 @@ const ProductShop = ({ data }) => {
   const handleDelete = async (record) => {
     const productToDelete = products.find((item) => item.key === record.key);
 
-    const response = await deleteProductApi(productToDelete);
+    const response = await productApi.deleteProduct(productToDelete);
     if (response.status === 200) {
       notification.success({
         message: 'Xóa thành công',
@@ -77,17 +76,28 @@ const ProductShop = ({ data }) => {
       });
       return;
     }
-    const data = {
+    const dataToSend = {
       warehouse_id: 1,
       note: note,
       products: selectedRows,
-    }
-    const response = await createOrderApi(data);
+    };
+    const response = await orderApi.createOrder(dataToSend);
     if (response.status === 200) {
       notification.success({
         message: 'Đặt hàng thành công',
         description: response?.RM || '',
       });
+
+      // Cập nhật danh sách sản phẩm
+      const remainingProducts = products.filter((item) => 
+        !selectedRows.some((selected) => selected.key === item.key)
+      );
+      setProducts(remainingProducts);
+
+      // Kiểm tra nếu không còn sản phẩm, gọi hàm onShopEmpty
+      if (remainingProducts.length === 0) {
+        onShopEmpty(data.shop); // Truyền shop ID để xóa shop
+      }
     } else {
       notification.error({
         message: 'Đặt hàng thất bại',
@@ -95,6 +105,7 @@ const ProductShop = ({ data }) => {
       });
     }
   };
+
 
   const columns = [
     {
@@ -135,8 +146,8 @@ const ProductShop = ({ data }) => {
         const numericPrice = parseFloat(price) || 0;
         return (
           <div>
-            <p>{numericPrice.toLocaleString('en-US')} ¥</p>
-            <p>({(numericPrice * applicableRate).toLocaleString('vi-VN')} VNĐ)</p>
+            <p>{formatUnit.moneyTQ(numericPrice)}</p>
+            <p>({formatUnit.moneyVN(numericPrice * applicableRate)})</p>
           </div>
         );
       },
@@ -148,8 +159,8 @@ const ProductShop = ({ data }) => {
         const price = parseFloat(record.price) || 0;
         const total = price * record.quantity;
         return <div>
-          <p>{total.toLocaleString('en-US')} ¥</p>
-          <p>({(total * applicableRate).toLocaleString('vi-VN')} VNĐ)</p>
+          <p>{formatUnit.moneyTQ(total)}</p>
+          <p>({formatUnit.moneyVN((total * applicableRate))})</p>
         </div>
       },
     },
@@ -191,11 +202,11 @@ const ProductShop = ({ data }) => {
         <Flex gap="middle" align='center'>
           <p>Đã chọn: {selectedRowKeys.length || 0}</p>
           <PauseOutlined />
-          <p>Tiền hàng: {commodityMoney.toLocaleString('vi-VN')} VNĐ</p>
+          <p>Tiền hàng: {formatUnit.moneyVN(commodityMoney)}</p>
           <PauseOutlined />
-          <p>Phí mua hàng: {purchaseFee.toLocaleString('vi-VN')} VNĐ</p>
+          <p>Phí mua hàng: {formatUnit.moneyVN(purchaseFee)}</p>
           <PauseOutlined />
-          <p>Tổng tiền tạm tính: {totalMoney.toLocaleString('vi-VN')} VNĐ</p>
+          <p>Tổng tiền tạm tính: {formatUnit.moneyVN(totalMoney)}</p>
         </Flex>
         <Input
               placeholder="Ghi chú"

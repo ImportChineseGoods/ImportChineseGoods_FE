@@ -8,7 +8,7 @@ const OrdersPage = () => {
     return (
         <Routes>
             <Route path="/" element={<Orders />} />
-            <Route path="/:order_id" element={<OrderDetail />} />
+            <Route path="/:order_id/*" element={<OrderDetail />} />
         </Routes>
     )
 }

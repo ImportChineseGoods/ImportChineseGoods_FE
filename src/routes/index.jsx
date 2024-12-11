@@ -6,14 +6,14 @@ import NotFound from "@pages/NotFound";
 import ProtectedRoute from "@components/router/ProtectedRoute";
 import Cart from "@pages/shopping/Cart";
 import ImportConsignment from "@pages/shopping/ImportConsignment";
-import Consignments from "@pages/consignments/Consignments";
 import Deposits from "@pages/payment/Deposits";
 import Withdraws from "@pages/payment/Withdraws";
 import Transactions from "@pages/payment/Transactions";
 import Complaints from "@pages/complaints/Complaints";
 import CreateProduct from "@pages/shopping/CreateProduct";
-import Test from "../pages/test";
-import OrdersPage from "../pages/orders";
+import Test from "@pages/test";
+import OrdersPage from "@pages/orders/OrderPage";
+import ConsignmentPage from "@pages/consignments/ConsignmentPage";
 
 const isAuthenticated = () => {
   return localStorage.getItem("access_token") !== null;
@@ -25,7 +25,7 @@ const protectedRoutes = [
   { path: "cart", component: <Cart /> },
   { path: "import-consignment", component: <ImportConsignment /> },
   { path: "orders/*", component: <OrdersPage /> },
-  { path: "consignments", component: <Consignments /> },
+  { path: "consignments/*", component: <ConsignmentPage /> },
   { path: "deposits", component: <Deposits /> },
   { path: "withdraws", component: <Withdraws /> },
   { path: "transactions", component: <Transactions /> },

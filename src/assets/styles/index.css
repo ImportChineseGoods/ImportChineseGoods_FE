@@ -77,10 +77,11 @@ table {
 
 .layouSider {
     position: fixed;
-    bottom: 0;
+    height: 100%;
     top: 56px;
     z-index: 1;
     padding: 20px 0;
+    overflow-y: auto;
 }
 
 .layoutBody {
@@ -147,7 +148,18 @@ table {
 
 }
 
-.orderInfoBox {
+.detailBox {
     width: 100%;
     padding: 20px;
+    gap: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
+
+.two-column {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Đảm bảo nội dung căn giữa theo chiều dọc */
+  }

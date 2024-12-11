@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { DoubleRightOutlined, LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-import { Breadcrumb, Card, ConfigProvider, Divider, Flex, Layout, List, theme } from 'antd';
+import { DoubleRightOutlined, LaptopOutlined } from '@ant-design/icons';
+import { Breadcrumb, Card, Divider, Flex, Layout, List, theme } from 'antd';
 import { AuthContext } from '@generals/contexts/authcontext';
 import { Link } from 'react-router-dom';
-import { overviewData } from '@api/getDataApi';
-const { Content } = Layout;
+import { getData } from '@api/getDataApi';
 
 const Homepage = () => {
   const { auth, appLoading, setAppLoading } = useContext(AuthContext);
@@ -15,7 +14,7 @@ const Homepage = () => {
 
   useEffect(() => {
     setAppLoading(true);
-      overviewData()
+      getData.overviewData()
         .then((res) => {
           if (res.status === 200) {
             setBalance(res.data?.balance);

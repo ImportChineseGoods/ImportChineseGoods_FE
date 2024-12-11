@@ -1,6 +1,6 @@
 import { Button, Form, Input, notification } from 'antd';
 import React, { useContext } from 'react';
-import { loginCustomerApi } from '@api/customerApi';
+import { customerApi } from '@api/customerApi';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '@generals/contexts/authcontext'; // Import AuthContext
 
@@ -11,7 +11,7 @@ const LoginScreen = () => {
   const onFinish = async (values) => {
     const { email, password } = values;
 
-    const res = await loginCustomerApi(email, password);
+    const res = await customerApi.loginCustomer(email, password);
 
     if (res?.status === 200) {
       // Lưu access_token và thông tin người dùng vào localStorage

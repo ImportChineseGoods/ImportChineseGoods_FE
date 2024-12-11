@@ -1,6 +1,6 @@
 import { Button, Checkbox, Form, Input, notification } from 'antd';
 import React from 'react';
-import { createCustomerApi } from '@api/customerApi';
+import { customerApi } from '@api/customerApi';
 import { useNavigate } from 'react-router-dom';
 import '@assets/styles/index.css';
 
@@ -11,7 +11,7 @@ const RegisterScreen = () => {
     const onFinish = async(values) => {
         const { name, phone, email, password } = values;
 
-        const res = await createCustomerApi(name, phone, email, password);
+        const res = await customerApi.createCustomer(name, phone, email, password);
     
         if (res) {
             notification.success({

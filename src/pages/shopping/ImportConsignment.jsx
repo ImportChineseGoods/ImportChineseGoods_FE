@@ -1,8 +1,8 @@
 import { Breadcrumb, Divider, Flex, Input, Button, Form, notification } from 'antd';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { createConsignmentApi } from '../../api/consignmentApi';
-import Consignments from '../../generals/components/components/consignments';
+import Consignments from '@components/components/consignments';
+import { consignmentApi } from '@api/consignmentApi';
 
 function ImportConsignment() {
   const [form] = Form.useForm();
@@ -23,7 +23,7 @@ function ImportConsignment() {
     };
 
     try {
-      const response = await createConsignmentApi(data);
+      const response = await consignmentApi.createConsignment(data);
 
       if (response?.status === 200) {
         notification.success({

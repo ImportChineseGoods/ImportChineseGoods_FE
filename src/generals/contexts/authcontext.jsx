@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from 'react';
-import { parametersApi } from '../../api/parameterApi';
 import { notification } from 'antd';
+import { parametersApi } from '@api/parameterApi';
 
 // Khởi tạo AuthContext
 export const AuthContext = createContext({
@@ -32,7 +32,7 @@ export const AuthWrapper = (props) => {
 
   useEffect(() => {
     if (1) {
-      parametersApi('applicable_rate')
+      parametersApi.getByType('applicable_rate')
         .then((res) => {
           if (res.status === 200) {
             setApplicableRate(res.parameter.value);
