@@ -9,11 +9,12 @@ import ImportConsignment from "@pages/shopping/ImportConsignment";
 import Deposits from "@pages/payment/Deposits";
 import Withdraws from "@pages/payment/Withdraws";
 import Transactions from "@pages/payment/Transactions";
-import Complaints from "@pages/complaints/Complaints";
 import CreateProduct from "@pages/shopping/CreateProduct";
 import Test from "@pages/test";
 import OrdersPage from "@pages/orders/OrderPage";
 import ConsignmentPage from "@pages/consignments/ConsignmentPage";
+import ComplaintsPage from "@pages/complaints/ComplaintPage";
+import InfoPage from "@pages/information/InfoPage";
 
 const isAuthenticated = () => {
   return localStorage.getItem("access_token") !== null;
@@ -29,8 +30,9 @@ const protectedRoutes = [
   { path: "deposits", component: <Deposits /> },
   { path: "withdraws", component: <Withdraws /> },
   { path: "transactions", component: <Transactions /> },
-  { path: "complaints", component: <Complaints /> },
+  { path: "complaints/*", component: <ComplaintsPage /> },
   { path: 'test', component: <Test /> },
+  { path: 'information', component: <InfoPage /> },
 ];
 
 // Tạo một hàm để bọc các route yêu cầu bảo vệ

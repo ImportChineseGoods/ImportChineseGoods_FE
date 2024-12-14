@@ -36,5 +36,11 @@ export const formatUnit = {
             minimumFractionDigits: 0, // Ít nhất 0 chữ số thập phân
             maximumFractionDigits: 2  // Tối đa 2 chữ số thập phân
         })}%`; // Thêm ký hiệu % thủ công
+    },
+    number: (number) => {
+        return parseFloat(number).toLocaleString('en-US', {
+            minimumFractionDigits: 0, // Ít nhất 0 chữ số thập phân
+            maximumFractionDigits: 0  // Tối đa 0 chữ số thập phân
+        });
     }
 };

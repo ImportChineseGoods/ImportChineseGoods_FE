@@ -14,5 +14,10 @@ export const getData = {
     depositData: () => {
         const URL_API = "/get/deposit-info";
         return axios.get(URL_API);
-    }
+    },
+
+    complaintOrderData: () => {
+        const URL_API = "/get/complaint-order";
+        return axios.get(URL_API);
+    },
 }

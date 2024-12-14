@@ -19,5 +19,21 @@ export const customerApi = {
             password
         }
         return axios.post(URL_API, data)
-    }
+    },
+
+    getCustomerInfo: () => {
+        const URL_API = "/customer/customer";   
+        return axios.get(URL_API)
+    },
+
+
+    editInfo: (data) => {
+        const URL_API = "/customer/edit-info";
+        return axios.patch(URL_API, data)
+    },
+
+    changePassword: (data) => {
+        const URL_API = "/customer/change-password";
+        return axios.patch(URL_API, data)
+    },
 }

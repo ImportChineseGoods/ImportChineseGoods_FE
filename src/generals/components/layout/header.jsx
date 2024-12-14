@@ -12,12 +12,12 @@ const Header = () => {
 
   const items = [
     {
-      label: <Link to="/information">Thông tin cá nhân</Link>,
+      label: <Link to="/information?tab=profile">Thông tin cá nhân</Link>,
       key: 'profile',
       icon: <UserOutlined />,
     },
     {
-      label: <Link to="/information">Đổi mật khẩu</Link>,
+      label: <Link to="/information?tab=change-password">Đổi mật khẩu</Link>,
       key: 'change-password',
       icon: <SettingOutlined />,
     },

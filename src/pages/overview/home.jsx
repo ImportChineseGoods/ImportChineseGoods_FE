@@ -4,6 +4,7 @@ import { Breadcrumb, Card, Divider, Flex, Layout, List, theme } from 'antd';
 import { AuthContext } from '@generals/contexts/authcontext';
 import { Link } from 'react-router-dom';
 import { getData } from '@api/getDataApi';
+import { formatUnit } from '@helpers/formatUnit';
 
 const Homepage = () => {
   const { auth, appLoading, setAppLoading } = useContext(AuthContext);
@@ -44,22 +45,22 @@ const Homepage = () => {
     {
       title: 'Số dư',
       icon: <LaptopOutlined />,
-      content: `${balance} đ`,
+      content: `${formatUnit.moneyVN(balance)}`,
       link: '/transactions'
     },
     {
       title: 'Đơn đặt hàng',
-      content: `${ordersCount} đơn`,
+      content: `${formatUnit.number(ordersCount)} đơn`,
       link: '/orders'
     },
     {
       title: 'Đơn ký gửi',
-      content: `${consignmentsCount} đơn`,
+      content: `${formatUnit.number(consignmentsCount)} đơn`,
       link: '/consignments'
     },
     {
       title: 'Khiếu nại',
-      content: `${complaintsCount} khiếu nại`,
+      content: `${formatUnit.number(complaintsCount)} khiếu nại`,
       link: '/complaints'
     },
   ];

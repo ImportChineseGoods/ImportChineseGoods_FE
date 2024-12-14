@@ -161,5 +161,6 @@ table {
 .two-column {
     display: flex;
     justify-content: space-between;
-    align-items: center; /* Đảm bảo nội dung căn giữa theo chiều dọc */
+    align-items: center;
+    margin-bottom: 10px;
   }
