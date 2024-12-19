@@ -1,13 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Button, Typography, InputNumber, Space, Table, Input, Image, notification, Flex, Divider } from 'antd';
-import { AuthContext } from '@generals/contexts/authcontext';
+import React, { useEffect, useState } from 'react';
+import { Typography, Table, Image } from 'antd';
 import { formatUnit } from '@helpers/formatUnit';
 const { Link } = Typography;
 
-const Products = ({ data }) => {
-    const { applicableRate } = useContext(AuthContext);
+const Products = ({ data, applicable_rate }) => {
     const [products, setProducts] = useState(data.map((product) => ({ ...product, key: product.id })));
-
 
     useEffect(() => {
         setProducts(data.map((product) => ({ ...product, key: product.id })));
@@ -42,7 +39,7 @@ const Products = ({ data }) => {
                 return (
                     <div>
                         <p>{formatUnit.moneyTQ(numericPrice)}</p>
-                        <p>({formatUnit.moneyVN(numericPrice * applicableRate)})</p>
+                        <p>({formatUnit.moneyVN(numericPrice * applicable_rate)})</p>
                     </div>
                 );
             },
@@ -55,7 +52,7 @@ const Products = ({ data }) => {
                 const total = price * record.quantity;
                 return <div>
                     <p>{formatUnit.moneyTQ(total)}</p>
-                    <p>({formatUnit.moneyVN((total * applicableRate))})</p>
+                    <p>({formatUnit.moneyVN((total * applicable_rate))})</p>
                 </div>
             },
         },

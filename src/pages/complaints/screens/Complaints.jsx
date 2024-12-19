@@ -1,7 +1,7 @@
 import { complaintApi } from '@api/complaintApi';
 import statusTagMapping from '@components/components/tag';
 import { AppResource } from '@generals/constants/AppResource';
-import { Breadcrumb, Image, Button, Divider, Flex, notification, Select, Space, Table } from 'antd'
+import { Breadcrumb, Image, Button, Divider, Flex, notification, Select, Space, Table, Modal } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -115,7 +115,21 @@ function Complaints() {
         return (
           <>
             {visible && (
-              <Button color="danger" variant="filled" onClick={() => handleCancel(record)}>
+              <Button color="danger" variant="filled" onClick={() => {
+                Modal.confirm({
+                  title: `Xác nhân hủy khiếu nại về đơn hàng ${record.order_id || record.consignment_id}`,
+                  content: 'Thao tác này không thể hoàn tác. Bạn có chắc chắn muốn hủy?',
+                  okText: 'Xác nhận',
+                  cancelText: 'Đóng',
+                  footer: (_, { OkBtn, CancelBtn }) => (
+                    <>
+                      <CancelBtn />
+                      <OkBtn />
+                    </>
+                  ),
+                  onOk: () => handleCancel(record),
+                });
+              }}>
                 Hủy
               </Button>
             )}

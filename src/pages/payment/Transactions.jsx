@@ -101,6 +101,7 @@ function Transactions() {
       render: (type) => {
         const typeMapping = {
           deposit: 'Nạp tiền',
+          payment: 'Thanh toán',
           withdraw: 'Rút tiền',
           refund: 'Hoàn tiền',
         };

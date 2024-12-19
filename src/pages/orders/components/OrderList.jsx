@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Typography, Image, Space, Flex, notification } from 'antd';
+import { Table, Button, Typography, Image, Space, Flex, notification, Modal } from 'antd';
 import statusTagMapping from '@components/components/tag';
 import { useNavigate } from 'react-router-dom';
 import { formatUnit } from '@helpers/formatUnit';
@@ -111,7 +111,21 @@ const OrdersList = ({ data, total, loading, page, pageSize, onPageChange }) => {
               </Button>
 
               {visible && (
-                <Button color="danger" variant="filled" onClick={() => handleCancel(record)}>
+                <Button color="danger" variant="filled" onClick={() => {
+                  Modal.confirm({
+                    title: `Xác nhân hủy đơn hàng ${record.id}`,
+                    content: 'Thao tác này không thể hoàng tác. Bạn có chắc chắn muốn hủy đơn hàng này?',
+                    okText: 'Xác nhận',
+                    cancelText: 'Đóng',
+                    footer: (_, { OkBtn, CancelBtn }) => (
+                      <>
+                        <CancelBtn />
+                        <OkBtn />
+                      </>
+                    ),
+                    onOk: () => handleCancel(record),
+                  });
+                }}>
                   Hủy
                 </Button>
               )}

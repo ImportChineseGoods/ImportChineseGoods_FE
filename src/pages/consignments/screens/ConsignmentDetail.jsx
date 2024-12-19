@@ -81,7 +81,7 @@ function ConsignmentDetail() {
                             const StatusTag = statusTagMapping[history.status];
                             return {
                                 key: history.id,
-                                label: `${formatDate(history.create_at)} ${history?.employee ? `by ${history.employee}` : ''}`,
+                                label: `${formatDate(history.create_at)} ${history?.employee ? `by ${history.employee.name}` : ''}`,
                                 children: <StatusTag />
                             }
                         })}

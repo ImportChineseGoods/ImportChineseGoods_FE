@@ -12,7 +12,7 @@ const WaitingExport = () => <Tag color="purple">Chờ xuất kho</Tag>;
 const Exported = () => <Tag color="cyan">Đã xuất kho</Tag>;
 const Pending = () => <Tag color="warning">Chờ xử lý</Tag>;
 const Processing = () => <Tag color="processing">Đang xử lý</Tag>;
-const Completed = () => <Tag color="success">Đã xử lý</Tag>;
+const Completed = () => <Tag color="success">Thành công</Tag>;
 const Cancelled = () => <Tag color="error">Đã hủy</Tag>;
 
 const statusTagMapping = {

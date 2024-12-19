@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, notification, Space } from 'antd';
+import { Table, Button, notification, Space, Modal } from 'antd';
 
 import { useNavigate } from 'react-router-dom';
 import { consignmentApi } from '@/api/consignmentApi';
@@ -80,7 +80,21 @@ const ConsignmentsList = ({ data, total, loading, page, pageSize, onPageChange }
             </Button>
 
             {visible && (
-              <Button color="danger" variant="filled" onClick={() => handleDelete(record)}>
+              <Button color="danger" variant="filled" onClick={() => {
+                Modal.confirm({
+                  title: `Xác nhân hủy đơn hàng ${record.id}`,
+                  content: 'Thao tác này không thể hoàng tác. Bạn có chắc chắn muốn hủy đơn hàng này?',
+                  okText: 'Xác nhận',
+                  cancelText: 'Đóng',
+                  footer: (_, { OkBtn, CancelBtn }) => (
+                    <>
+                      <CancelBtn />
+                      <OkBtn />
+                    </>
+                  ),
+                  onOk: () => handleDelete(record),
+                });
+              }}>
                 Xóa
               </Button>
             )}

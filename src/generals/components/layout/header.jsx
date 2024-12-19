@@ -53,7 +53,7 @@ const Header = () => {
   return (
     <div className="layoutHeader" >
       <div className='layoutLogo'>
-        <div className="logo"><img src={AppResource.logo} alt="logo" /></div>
+      <div className="logo"><Link to='/'><img src={AppResource.logo} alt="logo" /></Link></div>
         <p>Tỷ giá: {formatUnit.moneyVN(applicableRate)}</p>
       </div>
       <Dropdown

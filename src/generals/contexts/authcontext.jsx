@@ -52,7 +52,7 @@ export const AuthWrapper = (props) => {
         });
     }
     setAppLoading(false); 
-  }, []);
+  }, [auth]);
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');

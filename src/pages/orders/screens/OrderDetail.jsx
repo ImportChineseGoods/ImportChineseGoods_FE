@@ -78,11 +78,11 @@ function OrderDetail() {
             </div>
           </Flex>
           <Divider />
-          <Products data={products}></Products>
+          <Products data={products} applicable_rate={order.applicable_rate}></Products>
 
         </Flex>
         <Flex vertical className='detailBox' style={{ width: '500px' }}>
-          <BonusOrder data={order} ></BonusOrder>
+          <BonusOrder data={order}></BonusOrder>
         </Flex>
       </Flex>
     </div>

@@ -1,4 +1,4 @@
-import { Button, Divider, Flex, notification, Timeline, Typography } from 'antd';
+import { Button, Divider, Flex, Modal, notification, Timeline, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 const { Text } = Typography;
 
@@ -15,6 +15,7 @@ function BonusOrder({ data }) {
   const location = useLocation();
   const [histories, setHistories] = useState([]);
   const [user, setUser] = useState({});
+  const [isDeposited, setIsDeposited] = useState(data?.status === 'waiting_deposit');
   const { order_id } = useParams();
 
   const visible = !location.pathname.endsWith('/deposit');
@@ -40,11 +41,12 @@ function BonusOrder({ data }) {
       const StatusTag = statusTagMapping[history?.status];
       return {
         key: history.id,
-        label: `${formatDate(history.create_at)} ${history?.employee ? `by ${history.employee}` : ''}`,
+        label: `${formatDate(history.create_at)} ${history?.employee ? `by ${history.employee.name}` : ''}`,
         children: <StatusTag />,
       };
     }));
-  }, [data.histories]);
+    setIsDeposited(data?.status === 'waiting_deposit');
+  }, [data, data.histories]);
 
   const handleDeposit = async () => {
     const response = await transactionApi.depositOrder(value, order_id);
@@ -53,7 +55,8 @@ function BonusOrder({ data }) {
         message: 'Đặt cọc thành công',
         description: 'Đơn hàng của bạn đã được đặt cọc.',
       });
-      navigate(`/orders/${order_id}`);
+      setIsDeposited(false);
+      setTimeout(() => navigate(`/orders/${order_id}`), 1000);
     } else {
       notification.error({
         message: 'Lỗi khi đặt cọc',
@@ -63,9 +66,9 @@ function BonusOrder({ data }) {
   }
 
   const value = Math.round(data.commodity_money * data.applicable_rate * user.deposit_rate / 100 - data.amount_paid);
-  const isDeposited = data?.status === 'waiting_deposit';
   const isBalance = user.balance >= value;
-
+  console.log(data?.status)
+console.log('isDeposited', isDeposited);
   return (
     visible ? (
       <Flex vertical>
@@ -78,7 +81,8 @@ function BonusOrder({ data }) {
           />
         </div>
 
-        {isDeposited && <Button color="primary" variant="solid" onClick={() => navigate(`/orders/${order_id}/deposit`)}>
+        {isDeposited && 
+        <Button color="primary" variant="solid" onClick={() => navigate(`/orders/${order_id}/deposit`)}>
           Đặt cọc
         </Button>}
       </Flex>
@@ -94,9 +98,25 @@ function BonusOrder({ data }) {
 
           <Divider />
           <h3 className="two-column"><Text strong>Số tiền đặt cọc: ({formatUnit.percent(user.deposit_rate)}) </Text><Text type="danger">{formatUnit.moneyVN(value)}</Text></h3>
-          {isBalance ? <Button color="primary" variant="solid" onClick={() => handleDeposit()}>
+          {isBalance ? 
+          <Button color="primary" variant="solid" onClick={() => {
+            Modal.confirm({
+              title: `Xác nhân đặt cọc đơn hàng ${data.id}`,
+              content: `Thao tác này không thể hoàng tác. Bạn có chắc chắn muốn đặt cọc đơn hàng này với số tiền ${formatUnit.moneyVN(value)}`,
+              okText: 'Xác nhận',
+              cancelText: 'Đóng',
+              footer: (_, { OkBtn, CancelBtn }) => (
+                <>
+                  <CancelBtn />
+                  <OkBtn />
+                </>
+              ),
+              onOk: () => handleDeposit(),
+            });
+          }}>
             Đặt cọc
-          </Button> : <Text type="danger">Số dư của bạn không đủ, nạp thêm để đặt cọc!</Text>}
+          </Button>
+          : <Text type="danger">Số dư của bạn không đủ, nạp thêm để đặt cọc!</Text>}
           
         </Flex>
       </div>
