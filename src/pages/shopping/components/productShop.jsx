@@ -72,7 +72,7 @@ const ProductShop = ({ data, onShopEmpty }) => {
     if (selectedRows.length === 0) {
       notification.error({
         message: 'Không có sản phẩm nào được chọn',
-        description: 'Vui lòng chọn sản phẩm trước khi đặt hàng',   
+        description: 'Vui lòng chọn sản phẩm trước khi đặt hàng',
       });
       return;
     }
@@ -89,11 +89,12 @@ const ProductShop = ({ data, onShopEmpty }) => {
       });
 
       // Cập nhật danh sách sản phẩm
-      const remainingProducts = products.filter((item) => 
+      const remainingProducts = products.filter((item) =>
         !selectedRows.some((selected) => selected.key === item.key)
       );
       setProducts(remainingProducts);
-
+      setSelectedRowKeys([]);
+      setSelectedRows([]);
       // Kiểm tra nếu không còn sản phẩm, gọi hàm onShopEmpty
       if (remainingProducts.length === 0) {
         onShopEmpty(data.shop); // Truyền shop ID để xóa shop
@@ -117,7 +118,9 @@ const ProductShop = ({ data, onShopEmpty }) => {
             <Image width={80} height={80} src={record.image_url} />
           </div>
           <div>
-            <Link href={record.link}>{record.name}</Link>
+            <Link href={record.link} target="_blank" rel="noopener noreferrer">
+              {record.name}
+            </Link>
             <p>Thuộc tính: {record.description}</p>
             <Input
               placeholder="Ghi chú"
@@ -199,21 +202,21 @@ const ProductShop = ({ data, onShopEmpty }) => {
     <div>
       <Flex justify='space-around' align='center' className='shopOrder'>
         <Flex vertical gap="small">
-        <Flex gap="middle" align='center'>
-          <p>Đã chọn: {selectedRowKeys.length || 0}</p>
-          <PauseOutlined />
-          <p>Tiền hàng: {formatUnit.moneyVN(commodityMoney)}</p>
-          <PauseOutlined />
-          <p>Phí mua hàng: {formatUnit.moneyVN(purchaseFee)}</p>
-          <PauseOutlined />
-          <p>Tổng tiền tạm tính: {formatUnit.moneyVN(totalMoney)}</p>
+          <Flex gap="middle" align='center'>
+            <p>Đã chọn: {selectedRowKeys.length || 0}</p>
+            <PauseOutlined />
+            <p>Tiền hàng: {formatUnit.moneyVN(commodityMoney)}</p>
+            <PauseOutlined />
+            <p>Phí mua hàng: {formatUnit.moneyVN(purchaseFee)}</p>
+            <PauseOutlined />
+            <p>Tổng tiền tạm tính: {formatUnit.moneyVN(totalMoney)}</p>
+          </Flex>
+          <Input
+            placeholder="Ghi chú"
+            onChange={(value) => setNote(value.target.value)}
+          />
         </Flex>
-        <Input
-              placeholder="Ghi chú"
-              onChange={(value) => setNote(value.target.value)}
-            />
-        </Flex>
-        
+
         <Button type="primary" size='large' onClick={handleOrder}>Đặt hàng</Button>
       </Flex>
       <Table

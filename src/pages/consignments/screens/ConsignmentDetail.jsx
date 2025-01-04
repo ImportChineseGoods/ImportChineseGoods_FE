@@ -16,7 +16,6 @@ function ConsignmentDetail() {
         const fetchConsignment = async () => {
             const response = await consignmentApi.getConsignmentById(consignment_id);
             if (response.status === 200) {
-                console.log(response);
                 setConsignment(response.consignment);
                 setHistories(response.consignment.histories);
 

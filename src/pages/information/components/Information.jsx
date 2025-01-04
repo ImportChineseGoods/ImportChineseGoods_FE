@@ -41,7 +41,6 @@ function Information() {
     }
     return e?.fileList;
   };
-  console.log(information);
 
   const handleSubmit = async (values) => {
     const formData = new FormData();

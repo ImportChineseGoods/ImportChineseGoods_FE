@@ -67,8 +67,7 @@ function BonusOrder({ data }) {
 
   const value = Math.round(data.commodity_money * data.applicable_rate * user.deposit_rate / 100 - data.amount_paid);
   const isBalance = user.balance >= value;
-  console.log(data?.status)
-console.log('isDeposited', isDeposited);
+  
   return (
     visible ? (
       <Flex vertical>
@@ -102,7 +101,7 @@ console.log('isDeposited', isDeposited);
           <Button color="primary" variant="solid" onClick={() => {
             Modal.confirm({
               title: `Xác nhân đặt cọc đơn hàng ${data.id}`,
-              content: `Thao tác này không thể hoàng tác. Bạn có chắc chắn muốn đặt cọc đơn hàng này với số tiền ${formatUnit.moneyVN(value)}`,
+              content: `Thao tác này không thể hoàn tác. Bạn có chắc chắn muốn đặt cọc đơn hàng này với số tiền ${formatUnit.moneyVN(value)}`,
               okText: 'Xác nhận',
               cancelText: 'Đóng',
               footer: (_, { OkBtn, CancelBtn }) => (

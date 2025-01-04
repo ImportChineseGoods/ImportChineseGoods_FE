@@ -60,9 +60,6 @@ function Transactions() {
     setPageSize(value);
   };
 
-  console.log(transations)
-
-
   const startResult = (page - 1) * pageSize + 1;
   const endResult = Math.min(page * pageSize, total);
 

@@ -28,7 +28,6 @@ const Cart = () => {
       });
   }, []);
 
-  // Hàm xóa shop khỏi danh sách
   const handleShopEmpty = (shopId) => {
     setShopList((prevShops) => prevShops.filter((shop) => shop.shop !== shopId));
   };

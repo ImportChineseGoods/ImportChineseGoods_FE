@@ -159,10 +159,10 @@ const CreateProduct = () => {
           <Upload
             listType="picture-card"
             beforeUpload={(file) => {
-              setFileList([file]); // Lưu ảnh đã chọn vào fileList
-              return false;  // Chặn việc upload trực tiếp ảnh ngay lập tức
+              setFileList([file]); 
+              return false; 
             }}
-            onRemove={() => setFileList([])} // Xử lý khi ảnh bị xóa
+            onRemove={() => setFileList([])}
           >
             <button style={{ border: 0, background: 'none' }} type="button">
               <PlusOutlined />
