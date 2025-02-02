@@ -52,8 +52,7 @@ const ConsignmentsList = ({ data, total, loading, page, pageSize, onPageChange }
     },
     {
       title: 'Mã vận đơn',
-      dataIndex: 'bol',
-      render: (bol) => bol?.bol_code,
+      render: (_, record) => record.bol?.bol_code || record.bol_code,
     },
     {
       title: 'Ghi chú',
